@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="nav-logo">
+            <h2><i class="fas fa-car"></i> MAC Mobile Car Wash</h2>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section with 3D Animation -->
+<section id="home" class="hero">
+    <div class="hero-container">
+        <div class="hero-content animate__animated animate__fadeInLeft">
+            <h1>Professional Mobile Car Washing in Dubai</h1>
+            <p>{{ company.experience }} of excellence bringing premium car detailing to your doorstep</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <h3>{{ company.customers }}</h3>
+                    <p>Happy Customers</p>
+                </div>
+                <div class="stat">
+                    <h3>{{ company.experience }}</h3>
+                    <p>Experience</p>
+                </div>
+            </div>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="openContact()">Book Now</button>
+                <button class="btn-secondary" onclick="document.getElementById('pricing').scrollIntoView()">View Pricing</button>
+            </div>
+        </div>
+        <div class="hero-3d">
+            <canvas id="carCanvas"></canvas>
+        </div>
+    </div>
+    <div class="scroll-indicator">
+        <i class="fas fa-chevron-down"></i>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="services">
+    <div class="container">
+        <h2 class="section-title animate__animated animate__fadeInUp">Our Premium Services</h2>
+        <div class="services-grid">
+            {% for service in services %}
+            <div class="service-card animate__animated animate__fadeInUp" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="service-icon">{{ service.icon }}</div>
+                <h3>{{ service.title }}</h3>
+                <p>{{ service.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="pricing">
+    <div class="container">
+        <h2 class="section-title">Choose Your Perfect Plan</h2>
+        
+        <!-- Single Wash -->
+        <div class="pricing-category">
+            <h3>Single Wash Prices</h3>
+            <div class="pricing-grid">
+                {% for key, package in pricing.single_wash.items() %}
+                <div class="pricing-card {{ key }} animate__animated animate__zoomIn">
+                    <div class="card-header">
+                        <h4>{{ package.name }}</h4>
+                        <p>{{ package.type }}</p>
+                    </div>
+                    <div class="price">
+                        <span class="currency">AED</span>
+                        <span class="amount">{{ package.price }}</span>
+                    </div>
+                    <button class="btn-book" onclick="bookService('{{ package.name }}', {{ package.price }})">Book Now</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Monthly Packages -->
+        <div class="pricing-category">
+            <h3>Monthly Packages</h3>
+            <div class="pricing-grid">
+                {% for key, package in pricing.monthly.items() %}
+                <div class="pricing-card {{ key }} animate__animated animate__zoomIn">
+                    <div class="card-header">
+                        <h4>{{ package.name }}</h4>
+                        <p>{{ package.type }}</p>
+                    </div>
+                    <div class="price">
+                        <span class="currency">AED</span>
+                        <span class="amount">{{ package.price }}</span>
+                    </div>
+                    <button class="btn-book" onclick="bookService('{{ package.name }} Monthly', {{ package.price }})">Book Now</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Yearly Packages -->
+        <div class="pricing-category">
+            <h3>Yearly Packages - 30% Discount</h3>
+            <div class="pricing-grid">
+                {% for key, package in pricing.yearly.items() %}
+                <div class="pricing-card {{ key }} yearly animate__animated animate__zoomIn">
+                    <div class="discount-badge">30% OFF</div>
+                    <div class="card-header">
+                        <h4>{{ package.name }}</h4>
+                        <p>{{ package.type }}</p>
+                    </div>
+                    <div class="price">
+                        <span class="original-price">AED {{ package.original }}</span>
+                        <span class="currency">AED</span>
+                        <span class="amount">{{ package.discounted }}</span>
+                    </div>
+                    <button class="btn-book" onclick="bookService('{{ package.name }} Yearly', {{ package.discounted }})">Book Now</button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text animate__animated animate__fadeInLeft">
+                <h2>Best Car Washing and Cleaning in Dubai</h2>
+                <p>We MAC Mobile Car Wash is a Professional mobile car wash Company in Dubai providing car cleaning & detailing service to the corporate, villas and communities, residential towers, hotels and multiplex parking in UAE.</p>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Fully Insured Professional Staff</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-leaf"></i>
+                        <span>Eco-Friendly Products</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-home"></i>
+                        <span>Service At Your Doorstep</span>
+                    </div>
+                </div>
+            </div>
+            <div class="about-video animate__animated animate__fadeInRight">
+                <div class="video-placeholder">
+                    <i class="fas fa-play"></i>
+                    <p>Watch Our Service Video</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact">
+    <div class="container">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-content">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h4>Call Us Anytime</h4>
+                        <p>{{ company.phone }}</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h4>Email Us</h4>
+                        <p>{{ company.email }}</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Service Area</h4>
+                        <p>{{ company.location }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form">
+                <form id="contactForm">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <select id="service" name="service" required>
+                            <option value="">Select Service</option>
+                            <option value="silver">Silver Wash - AED 55</option>
+                            <option value="gold">Gold Wash - AED 75</option>
+                            <option value="green-monthly">Green Monthly - AED 180</option>
+                            <option value="blue-monthly">Blue Monthly - AED 240</option>
+                            <option value="green-yearly">Green Yearly - AED 1500</option>
+                            <option value="blue-yearly">Blue Yearly - AED 2000</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" placeholder="Additional Message" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-car"></i> MAC Mobile Car Wash</h3>
+                <p>Professional mobile car washing and detailing services in Dubai, UAE.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone"></i> {{ company.phone }}</p>
+                <p><i class="fas fa-envelope"></i> {{ company.email }}</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 MAC Mobile Car Wash. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Chatbot -->
+<div id="chatbot" class="chatbot">
+    <div class="chatbot-header">
+        <h4><i class="fas fa-comments"></i> MAC Assistant</h4>
+        <button id="chatbot-toggle"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="chatbot-messages" id="chatbot-messages">
+        <div class="message bot-message">
+            <p>Hello! I'm here to help with MAC Mobile Car Wash. Ask me about our services, pricing, or booking!</p>
+        </div>
+    </div>
+    <div class="chatbot-input">
+        <input type="text" id="chatbot-input" placeholder="Type your message...">
+        <button id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<button id="chatbot-trigger" class="chatbot-trigger">
+    <i class="fas fa-comments"></i>
+</button>
+{% endblock %}
